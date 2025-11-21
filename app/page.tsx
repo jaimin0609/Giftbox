@@ -316,6 +316,15 @@ export default function Home() {
                   I made something special for you... 🎁
                 </motion.p>
 
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                  className="text-2xl text-rose-800 text-center mb-8 font-light"
+                >
+                  Are you ready to get surprised... 😊
+                </motion.p>
+
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -368,28 +377,6 @@ export default function Home() {
               >
                 Made with Love for You 💐
               </motion.h2>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mb-12 text-center max-w-2xl mx-auto"
-              >
-                <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-blue-200/50 shadow-lg">
-                  <p className="text-lg text-rose-800 mb-2">💙 Our Special Days 💙</p>
-                  <div className="flex flex-col md:flex-row gap-4 justify-center items-center text-blue-900 font-medium">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">💫</span>
-                      <span>First Meeting: 02/05/2022</span>
-                    </div>
-                    <div className="hidden md:block text-rose-400">•</div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">💕</span>
-                      <span>Anniversary: 03/05/2022</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
 
               <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full"
