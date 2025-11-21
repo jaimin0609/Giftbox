@@ -1,65 +1,1250 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Camera, Headphones, BookHeart, Gift, X, ChevronLeft } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+import confetti from 'canvas-confetti';
+
+type ViewState = 'intro' | 'menu' | 'photos' | 'video' | 'card' | 'gift' | 'timeline';
+
+interface AppData {
+  photos: string[];
+  youtubeId: string;
+  cardMessage: string;
+  giftMessage: string;
+}
 
 export default function Home() {
+  const [view, setView] = useState<ViewState>('intro');
+  const [appData, setAppData] = useState<AppData>({
+    photos: [
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714165/IMG_1782_rgky13.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714148/IMG_2040_xknmlp.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714148/2a9d5d71-0dfd-4ada-9191-d2875b379901_mb6eqf.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714147/0d10884a-e62b-4cef-b4b5-f1047f13d67d_ftdl0t.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714147/4d5b8811-2ff3-40f0-b8d9-f7d577296b1b_xpbrjx.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714146/IMG_7279_buasgy.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714144/f9177054-ea59-410f-b0f9-cb745efa7fb5_hd11q9.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714143/4b9371a5-bc6b-4f44-b124-a852c822ddac_np0iej.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714143/IMG_7996_cattsg.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714142/IMG_2381_xkbpa8.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714142/IMG_8131_kat5wg.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714140/IMG_8890_ndi7vv.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714139/IMG_3220_dfpzxg.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714138/IMG_8834_bqinuw.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714136/6c550aa9-caf2-4c42-8d1e-7ce2d2a53275_o0wszv.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714135/IMG_1238_nhlvxx.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714136/60327820-9f11-422f-88e6-89adce69d37c_uizbox.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714135/DD1FEBCA-12A5-4EAD-B911-D0D520BFCBD6_dx8yan.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714133/IMG_2018_t3f2mu.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714131/IMG_3224_ub2ftq.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714130/IMG_1789_cfbnx4.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714129/9d9dec49-185f-496a-8661-497d2e3c4cf1_qfv98h.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763714129/IMG_2282_upadhp.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713479/IMG_6691_dsnng0.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713479/IMG_4273_sqwjzg.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713478/IMG_7771_xvlzeq.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713477/d267a174-bc85-45b8-a418-b62aba4489c6_udjqkd.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713477/IMG_1782_vbixow.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763713476/5977028c-2089-4312-a1c9-f76437107817_carrve.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763712926/015873e0-3491-4841-be62-bd5f935e6e22_uppuos.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763712724/d2d60043-9226-4abd-8ab2-2667c55e156d_lr57y0.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763712724/4caa2ed6-1e1e-48b5-9dac-938364c11263_cb7z31.jpg',
+      'https://res.cloudinary.com/djhid28ds/image/upload/v1763712724/53d83a98-c8b5-48c1-855d-a15a34b6d39d_a6j2nd.jpg',
+    ],
+    youtubeId: '2Vv-BfVoq4g',
+    cardMessage: 'Happy Birthday, Shruti! 💙\n\nFrom our first meeting on 02/05/2022 to becoming official on 03/05/2022, every moment with you has been magical. You make my world brighter, my days sweeter, and my heart fuller.\n\nYou are my best friend, my partner, and the love of my life. Here\'s to many more beautiful memories together.\n\nI love you more than words can express. ❤️💙',
+    giftMessage: '🎉 Your special surprise is waiting for you!\n\nI\'ve planned something just for YOU... Get ready for an amazing day filled with love and joy! 💝✨',
+  });
+
+  // Timeline milestone photos
+  const timelinePhotos = {
+    phoneCalls: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712724/53d83a98-c8b5-48c1-855d-a15a34b6d39d_a6j2nd.jpg',
+    firstMeeting: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712725/1be065fb-a556-43d0-8858-01efa9c60958_dtrguk.jpg',
+    wedding: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712725/7ee6158b-943d-4cad-b83a-491e3d58f1a6_obngar.jpg',
+    honeymoon: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712725/IMG_6691_v24eus.jpg',
+    longDistance: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712724/IMG_1366_rxfnmz.jpg',
+    reunion: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712725/81eff231-4665-4dfc-91f2-c18479d244f4_iw3pid.jpg',
+    birthday2024: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712728/IMG_7216_cgnm5i.jpg',
+    birthday2025: 'https://res.cloudinary.com/djhid28ds/image/upload/v1763712728/IMG_1789_cpjpjs.jpg',
+    birthdayToday: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop',
+  };
+
+  const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
+  const [showToast, setShowToast] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [giftOpened, setGiftOpened] = useState(false);
+  const [giftShaking, setGiftShaking] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
+  const noButtonRef = useRef<HTMLButtonElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Firebase real-time listener
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      doc(db, 'config', 'birthday'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setAppData({
+            photos: data.photos || appData.photos,
+            youtubeId: data.youtubeId || appData.youtubeId,
+            cardMessage: data.cardMessage || appData.cardMessage,
+            giftMessage: data.giftMessage || appData.giftMessage,
+          });
+        }
+      },
+      (error) => {
+        console.log('Firebase connection not available, using default data');
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // Preload first 6 images for better perceived performance
+  useEffect(() => {
+    const preloadImages = appData.photos.slice(0, 6);
+    preloadImages.forEach((src, index) => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedImages(prev => new Set([...prev, index]));
+      };
+      // Optimize Cloudinary images
+      img.src = src.includes('cloudinary')
+        ? src.replace('/upload/', '/upload/f_auto,q_auto,w_800/')
+        : src;
+    });
+  }, [appData.photos]);
+
+  // Setup Intersection Observer for lazy loading
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute('data-index') || '0');
+            setVisibleImages(prev => new Set([...prev, index]));
+          }
+        });
+      },
+      { rootMargin: '200px' }
+    );
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
+
+  const handleNoButtonHover = () => {
+    if (noButtonRef.current) {
+      const maxX = window.innerWidth - 150;
+      const maxY = window.innerHeight - 80;
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+      setNoButtonPos({ x: newX, y: newY });
+    }
+  };
+
+  const handleNoButtonClick = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const handleGiftClick = () => {
+    if (!giftOpened) {
+      setGiftShaking(true);
+      setTimeout(() => {
+        setGiftShaking(false);
+        setGiftOpened(true);
+
+        // Confetti explosion
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min: number, max: number) {
+          return Math.random() * (max - min) + min;
+        }
+
+        const interval: any = setInterval(function () {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            colors: ['#fda4af', '#fb7185', '#f43f5e', '#fbbf24', '#f59e0b'],
+          });
+          confetti({
+            ...defaults,
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            colors: ['#fda4af', '#fb7185', '#f43f5e', '#fbbf24', '#f59e0b'],
+          });
+        }, 250);
+      }, 1000);
+    }
+  };
+
+  const menuItems = [
+    { id: 'photos', icon: Camera, label: 'Our Memories', color: 'rose' },
+    { id: 'timeline', icon: BookHeart, label: 'Our Journey', color: 'blue' },
+    { id: 'video', icon: Headphones, label: 'For You', color: 'pink' },
+    { id: 'card', icon: BookHeart, label: 'Love Letter', color: 'red' },
+    { id: 'gift', icon: Gift, label: 'Surprise', color: 'amber' },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-linear-to-br from-rose-50 via-blue-50 to-pink-50 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-white/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-rose-200"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <p className="text-rose-900 font-medium">💕 I&apos;ll wait for you... forever! 💕</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Main Content */}
+      <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          {/* Intro View */}
+          {view === 'intro' && (
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4"
+            >
+              <motion.h1
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: 'easeOut' }}
+                className="text-7xl md:text-9xl font-serif text-rose-900 mb-16 text-center"
+                style={{ fontFamily: 'Playfair Display, serif' }}
+              >
+                Hi, Shruti! 💝
+              </motion.h1>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="space-y-6"
+              >
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                  className="text-2xl text-rose-800 text-center mb-8 font-light"
+                >
+                  I made something special for you... 🎁
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                  className="flex gap-6 justify-center items-center"
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="px-12 py-4 bg-linear-to-r from-rose-500 via-blue-500 to-pink-500 text-white rounded-full text-xl font-semibold shadow-xl hover:shadow-2xl transition-all"
+                  >
+                    Yes! 💖
+                  </motion.button>
+
+                  <motion.button
+                    ref={noButtonRef}
+                    whileHover={{ scale: 1.1 }}
+                    onMouseEnter={handleNoButtonHover}
+                    onClick={handleNoButtonClick}
+                    className="px-12 py-4 bg-white/50 backdrop-blur-sm text-rose-900 rounded-full text-xl font-semibold border-2 border-rose-300 shadow-lg"
+                    style={{
+                      position: noButtonPos.x !== 0 ? 'fixed' : 'relative',
+                      left: noButtonPos.x !== 0 ? `${noButtonPos.x}px` : 'auto',
+                      top: noButtonPos.y !== 0 ? `${noButtonPos.y}px` : 'auto',
+                      transition: 'left 0.3s ease, top 0.3s ease',
+                    }}
+                  >
+                    No 😢
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Menu View */}
+          {view === 'menu' && (
+            <motion.div
+              key="menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            >
+              <motion.h2
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-5xl md:text-7xl font-serif text-rose-900 mb-16 text-center"
+                style={{ fontFamily: 'Playfair Display, serif' }}
+              >
+                Made with Love for You 💐
+              </motion.h2>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mb-12 text-center max-w-2xl mx-auto"
+              >
+                <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-blue-200/50 shadow-lg">
+                  <p className="text-lg text-rose-800 mb-2">💙 Our Special Days 💙</p>
+                  <div className="flex flex-col md:flex-row gap-4 justify-center items-center text-blue-900 font-medium">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">💫</span>
+                      <span>First Meeting: 02/05/2022</span>
+                    </div>
+                    <div className="hidden md:block text-rose-400">•</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">💕</span>
+                      <span>Anniversary: 03/05/2022</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.15,
+                    },
+                  },
+                }}
+              >
+                {menuItems.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.8 },
+                      visible: { opacity: 1, scale: 1 },
+                    }}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setView(item.id as ViewState)}
+                    className="group relative bg-white/40 backdrop-blur-md rounded-3xl p-8 cursor-pointer border border-rose-200/50 shadow-xl hover:shadow-2xl transition-all overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-linear-to-br from-rose-100/50 to-pink-100/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                    <div className="relative z-10 flex flex-col items-center text-center space-y-4">
+                      <div className="p-6 bg-linear-to-br from-blue-400 to-rose-400 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow">
+                        <item.icon className="w-12 h-12 text-white" />
+                      </div>
+                      <h3 className="text-2xl font-semibold text-rose-900">{item.label}</h3>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Photos View */}
+          {view === 'photos' && (
+            <motion.div
+              key="photos"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen px-4 py-12"
+            >
+              <div className="max-w-6xl mx-auto">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Our Memories 📸
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                <motion.div
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.02,
+                        delayChildren: 0,
+                      },
+                    },
+                  }}
+                >
+                  {appData.photos.map((photo, index) => (
+                    <motion.div
+                      key={index}
+                      variants={{
+                        hidden: { opacity: 0, y: 10 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
+                      transition={{ duration: 0.2 }}
+                      whileHover={{ scale: 1.03 }}
+                      onClick={() => setSelectedPhoto(index.toString())}
+                      className="relative aspect-square rounded-2xl overflow-hidden cursor-pointer shadow-xl hover:shadow-2xl transition-all bg-rose-100"
+                    >
+                      {/* Blur placeholder */}
+                      {!loadedImages.has(index) && (
+                        <div className="absolute inset-0 bg-linear-to-br from-rose-100 to-pink-100 animate-pulse" />
+                      )}
+
+                      <img
+                        src={photo.includes('cloudinary')
+                          ? photo.replace('/upload/', '/upload/f_auto,q_auto,w_800/')
+                          : photo}
+                        alt={`Memory ${index + 1}`}
+                        loading={index < 6 ? "eager" : "lazy"}
+                        decoding="async"
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${loadedImages.has(index) ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        onLoad={() => {
+                          setLoadedImages(prev => new Set([...prev, index]));
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-linear-to-t from-rose-900/30 to-transparent opacity-0 hover:opacity-100 transition-opacity"></div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Lightbox */}
+              <AnimatePresence>
+                {selectedPhoto && (() => {
+                  const currentIndex = parseInt(selectedPhoto);
+                  const currentPhotoUrl = appData.photos[currentIndex];
+                  const hasPrev = currentIndex > 0;
+                  const hasNext = currentIndex < appData.photos.length - 1;
+
+                  const handlePrev = (e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    if (hasPrev) setSelectedPhoto((currentIndex - 1).toString());
+                  };
+
+                  const handleNext = (e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    if (hasNext) setSelectedPhoto((currentIndex + 1).toString());
+                  };
+
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setSelectedPhoto(null)}
+                      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+                    >
+                      {/* Close Button */}
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={{ scale: 1.1 }}
+                        onClick={() => setSelectedPhoto(null)}
+                        className="absolute top-8 right-8 p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-all z-10"
+                      >
+                        <X className="w-6 h-6" />
+                      </motion.button>
+
+                      {/* Previous Button */}
+                      {hasPrev && (
+                        <motion.button
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          whileHover={{ scale: 1.1, x: -5 }}
+                          onClick={handlePrev}
+                          className="absolute left-8 p-4 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-all z-10"
+                        >
+                          <ChevronLeft className="w-8 h-8" />
+                        </motion.button>
+                      )}
+
+                      {/* Next Button */}
+                      {hasNext && (
+                        <motion.button
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          whileHover={{ scale: 1.1, x: 5 }}
+                          onClick={handleNext}
+                          className="absolute right-8 p-4 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-all z-10 top-1/2 -translate-y-1/2"
+                        >
+                          <ChevronLeft className="w-8 h-8 rotate-180" />
+                        </motion.button>
+                      )}
+
+                      {/* Image Counter */}
+                      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium z-10">
+                        {currentIndex + 1} / {appData.photos.length}
+                      </div>
+
+                      <motion.img
+                        key={currentIndex}
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.9, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        src={currentPhotoUrl.includes('cloudinary')
+                          ? currentPhotoUrl.replace('/upload/', '/upload/f_auto,q_auto,w_1200/')
+                          : currentPhotoUrl}
+                        alt={`Memory ${currentIndex + 1}`}
+                        loading="eager"
+                        className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl"
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      />
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
+            </motion.div>
+          )}
+
+          {/* Video View */}
+          {view === 'video' && (
+            <motion.div
+              key="video"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            >
+              <div className="max-w-4xl w-full">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    For You 🎵
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="relative bg-white/40 backdrop-blur-md rounded-3xl p-4 shadow-2xl border border-rose-200/50 overflow-hidden"
+                >
+                  <div className="aspect-video rounded-2xl overflow-hidden">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${appData.youtubeId}?modestbranding=1&rel=0`}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Timeline View - Our Journey Map */}
+          {view === 'timeline' && (
+            <motion.div
+              key="timeline"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen px-4 py-12"
+            >
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Our Love Story 💙💕
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                {/* Journey Map Container */}
+                <div className="relative max-w-5xl mx-auto">
+                  {/* Decorative curved path using SVG */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+                    <defs>
+                      <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#93c5fd', stopOpacity: 0.6 }} />
+                        <stop offset="30%" style={{ stopColor: '#fda4af', stopOpacity: 0.6 }} />
+                        <stop offset="60%" style={{ stopColor: '#f9a8d4', stopOpacity: 0.6 }} />
+                        <stop offset="100%" style={{ stopColor: '#fbbf24', stopOpacity: 0.6 }} />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M 50 50 Q 200 150, 250 300 T 250 600 Q 300 800, 250 1000 T 250 1400 Q 200 1600, 250 1800 T 250 2200 Q 300 2400, 250 2600 T 250 3000 Q 200 3200, 250 3400 T 250 3600"
+                      stroke="url(#pathGradient)"
+                      strokeWidth="3"
+                      fill="none"
+                      strokeDasharray="10,5"
+                      className="opacity-40"
+                    />
+                  </svg>
+
+                  {/* Timeline Events */}
+                  <motion.div
+                    className="space-y-16 relative z-10"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      visible: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.15,
+                        },
+                      },
+                    }}
+                  >
+                    {/* 1. Phone Calls - September 2021 to May 2022 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-start"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: -3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-blue-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.phoneCalls} alt="Phone Calls" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-blue-50/90 to-sky-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-blue-300/50 relative"
+                        >
+                          <div className="absolute -left-3 top-8 w-6 h-6 bg-blue-500 rounded-full border-4 border-white shadow-lg"></div>
+                          <p className="text-xs text-blue-700 font-bold mb-2 uppercase tracking-wide">🇦🇺 Australia ↔️ India 🇮🇳</p>
+                          <p className="text-sm text-blue-600 font-semibold mb-2">September 2021 - May 2022</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Our Story Begins 📞💙</h3>
+                          <p className="text-rose-800 leading-relaxed">Eight magical months of phone calls connecting two hearts across continents. Though miles apart, our conversations brought us closer each day. You were in India, I was in Australia, but our hearts were already finding their way to each other.</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 2. First Meeting - May 2, 2022 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-end"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl flex-row-reverse">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.firstMeeting} alt="First Meeting" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-rose-50/90 to-pink-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-rose-300/50 relative"
+                        >
+                          <div className="absolute -right-3 top-8 w-6 h-6 bg-rose-500 rounded-full border-4 border-white shadow-lg"></div>
+                          <p className="text-xs text-rose-700 font-bold mb-2 uppercase tracking-wide">✈️ Ahmedabad Airport</p>
+                          <p className="text-sm text-rose-600 font-semibold mb-2">May 2, 2022</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Finally Face to Face! 💫✨</h3>
+                          <p className="text-rose-800 leading-relaxed">The moment I'd been dreaming of! You, our families, all at the airport to welcome me. After 8 months of calls, I finally saw your beautiful smile in person. My heart knew - this was just the beginning of forever.</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 3. Wedding Day - May 3, 2022 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-center"
+                    >
+                      <div className="flex flex-col items-center gap-4 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400"
+                        >
+                          <img src={timelinePhotos.wedding} alt="Wedding" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-amber-50/95 via-orange-50/95 to-rose-50/95 backdrop-blur-md rounded-3xl p-8 shadow-2xl border-4 border-amber-300 relative w-full"
+                        >
+                          <div className="absolute -top-4 left-1/2 -ml-4 w-10 h-10 bg-gradient-to-br from-amber-400 to-rose-500 rounded-full border-4 border-white shadow-2xl flex items-center justify-center text-2xl">
+                            💍
+                          </div>
+                          <p className="text-xs text-amber-700 font-bold mb-2 uppercase tracking-wide text-center">🌟 The Most Special Day 🌟</p>
+                          <p className="text-sm text-rose-600 font-semibold mb-2 text-center">May 3, 2022</p>
+                          <h3 className="text-3xl md:text-4xl font-serif text-rose-900 mb-3 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>We Got Married! 💕👰🤵💕</h3>
+                          <p className="text-rose-800 leading-relaxed text-center text-lg">Just one day after meeting, we became husband and wife! The best decision of my life. Standing beside you, promising forever - that moment will always be etched in my heart. You became my everything that day. ❤️</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 4. Honeymoon - Leh Ladakh */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-start"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: -3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-sky-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.honeymoon} alt="Honeymoon" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-sky-50/90 to-blue-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-sky-300/50 relative"
+                        >
+                          <div className="absolute -left-3 top-8 w-6 h-6 bg-sky-500 rounded-full border-4 border-white shadow-lg"></div>
+                          <p className="text-xs text-sky-700 font-bold mb-2 uppercase tracking-wide">🏔️ Leh Ladakh, India</p>
+                          <p className="text-sm text-blue-600 font-semibold mb-2">May 2022</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Honeymoon in the Himalayas 🏔️💙</h3>
+                          <p className="text-rose-800 leading-relaxed">Our first adventure as husband and wife! The breathtaking mountains of Leh Ladakh witnessed the beginning of our journey together. Every moment, every view, every smile - made more beautiful because you were by my side.</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 5. Long Distance Again - June 2022 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-end"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl flex-row-reverse">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-indigo-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.longDistance} alt="Long Distance" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-indigo-50/90 to-purple-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-indigo-300/50 relative"
+                        >
+                          <div className="absolute -right-3 top-8 w-6 h-6 bg-indigo-500 rounded-full border-4 border-white shadow-lg"></div>
+                          <p className="text-xs text-indigo-700 font-bold mb-2 uppercase tracking-wide">💔 Miles Apart Again</p>
+                          <p className="text-sm text-indigo-600 font-semibold mb-2">June 2022 - July 2023</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Waiting for You 🌏💭</h3>
+                          <p className="text-rose-800 leading-relaxed">The hardest 13 months of my life. I returned to Australia while you stayed in India. Every day felt incomplete without you. But our love grew stronger, and I counted down each day until I could hold you again. 🇦🇺💙🇮🇳</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 6. Reunion - July 31, 2023 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-center"
+                    >
+                      <div className="flex flex-col items-center gap-4 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          className="w-40 h-40 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-2xl border-4 border-emerald-400"
+                        >
+                          <img src={timelinePhotos.reunion} alt="Reunion" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-emerald-50/95 via-teal-50/95 to-cyan-50/95 backdrop-blur-md rounded-3xl p-8 shadow-2xl border-4 border-emerald-300 relative w-full"
+                        >
+                          <div className="absolute -top-4 left-1/2 -ml-4 w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full border-4 border-white shadow-2xl flex items-center justify-center text-2xl">
+                            ✈️
+                          </div>
+                          <p className="text-xs text-emerald-700 font-bold mb-2 uppercase tracking-wide text-center">🎉 Together Again! 🎉</p>
+                          <p className="text-sm text-emerald-600 font-semibold mb-2 text-center">July 31, 2023</p>
+                          <h3 className="text-3xl md:text-4xl font-serif text-rose-900 mb-3 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>You Came to Australia! 🇦🇺💚</h3>
+                          <p className="text-rose-800 leading-relaxed text-center text-lg">The day my world became complete! You arrived in Australia with my parents, and finally, FINALLY, we could start our life together properly. No more distance, no more waiting. Just us, together, forever. 💕</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 7. First Birthday in Australia - January 3, 2024 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-start"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: -3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.birthday2024} alt="Birthday 2024" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-pink-50/90 to-rose-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-pink-300/50 relative"
+                        >
+                          <div className="absolute -left-3 top-8 w-8 h-8 bg-pink-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-lg">
+                            🎂
+                          </div>
+                          <p className="text-xs text-pink-700 font-bold mb-2 uppercase tracking-wide">🎈 Your First Birthday With Me</p>
+                          <p className="text-sm text-pink-600 font-semibold mb-2">January 3, 2024</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Birthday #1 Together! 🎉💕</h3>
+                          <p className="text-rose-800 leading-relaxed">Your first birthday in Australia, and my first time celebrating YOUR special day with you by my side! I finally got to wake you up with birthday wishes, see your smile all day, and make you feel as special as you make me feel every single day. 🎊💖</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 8. Most Recent Birthday - January 3, 2025 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-end"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl flex-row-reverse">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-fuchsia-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.birthday2025} alt="Birthday 2025" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-fuchsia-50/90 to-pink-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-fuchsia-300/50 relative"
+                        >
+                          <div className="absolute -right-3 top-8 w-8 h-8 bg-fuchsia-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-lg">
+                            🎂
+                          </div>
+                          <p className="text-xs text-fuchsia-700 font-bold mb-2 uppercase tracking-wide">🎈 Your Last Birthday</p>
+                          <p className="text-sm text-fuchsia-600 font-semibold mb-2">January 3, 2025</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Birthday #2 Together! 🎊💖</h3>
+                          <p className="text-rose-800 leading-relaxed">Your most recent birthday! Another beautiful year with you, another celebration of the amazing person you are. Each year with you gets better and better. Watching you grow, laugh, and shine makes every day brighter! 🎉✨</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 9. Next Birthday - January 3, 2026 */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-start"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: -3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-violet-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.birthday2025} alt="Next Birthday" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-violet-50/90 to-purple-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-violet-300/50 relative"
+                        >
+                          <div className="absolute -left-3 top-8 w-8 h-8 bg-violet-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-lg">
+                            🎂
+                          </div>
+                          <p className="text-xs text-violet-700 font-bold mb-2 uppercase tracking-wide">🎈 Coming Soon!</p>
+                          <p className="text-sm text-violet-600 font-semibold mb-2">January 3, 2026</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Your Next Birthday! 🎊💜</h3>
+                          <p className="text-rose-800 leading-relaxed">Just around the corner! I can't wait to celebrate you again, to see your eyes light up, to make you smile. Every birthday with you is a gift to me. I'm already planning how to make this one even more special! 🎁✨</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 11. Many More Birthdays to Come */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-end"
+                    >
+                      <div className="flex items-start gap-6 max-w-2xl flex-row-reverse">
+                        <motion.div
+                          whileHover={{ scale: 1.05, rotate: 3 }}
+                          className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden shadow-2xl border-4 border-amber-300 flex-shrink-0"
+                        >
+                          <img src={timelinePhotos.birthdayToday} alt="Many Birthdays" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-amber-50/90 to-yellow-100/90 backdrop-blur-md rounded-3xl p-6 shadow-2xl border-2 border-amber-300/50 relative"
+                        >
+                          <div className="absolute -right-3 top-8 w-8 h-8 bg-amber-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-lg">
+                            🎂
+                          </div>
+                          <p className="text-xs text-amber-700 font-bold mb-2 uppercase tracking-wide">🎈 Every Year Together</p>
+                          <p className="text-sm text-amber-600 font-semibold mb-2">2027, 2028, 2029... Forever</p>
+                          <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>All Your Birthdays to Come 🎉💛</h3>
+                          <p className="text-rose-800 leading-relaxed">Every single birthday for the rest of our lives, I'll be right here beside you. Celebrating you, loving you, making you feel like the queen you are. From now until we're old and gray, I promise to make each birthday magical! 👑✨</p>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* 12. Our Forever Journey */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.8 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      className="relative flex items-start justify-center"
+                    >
+                      <div className="flex flex-col items-center gap-4 max-w-3xl">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden shadow-2xl border-4 border-gradient-to-r from-blue-400 via-rose-400 to-pink-400"
+                          style={{ borderImage: 'linear-gradient(to right, #60a5fa, #fb7185, #f9a8d4) 1' }}
+                        >
+                          <img src={timelinePhotos.reunion} alt="Forever" className="w-full h-full object-cover" />
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          className="bg-gradient-to-br from-blue-50/95 via-rose-50/95 to-pink-50/95 backdrop-blur-md rounded-3xl p-10 shadow-2xl border-4 border-gradient-to-r relative w-full"
+                          style={{ borderImage: 'linear-gradient(135deg, #60a5fa, #fb7185, #f9a8d4) 1' }}
+                        >
+                          <div className="absolute -top-5 left-1/2 -ml-5 w-12 h-12 bg-gradient-to-br from-blue-500 via-rose-500 to-pink-500 rounded-full border-4 border-white shadow-2xl flex items-center justify-center text-3xl">
+                            💍
+                          </div>
+                          <p className="text-xs text-blue-700 font-bold mb-3 uppercase tracking-wide text-center">✨ Forever & Always ✨</p>
+                          <h3 className="text-3xl md:text-4xl font-serif text-rose-900 mb-4 text-center" style={{ fontFamily: 'Playfair Display, serif' }}>Our Journey Continues... 💫💕</h3>
+                          <p className="text-rose-800 leading-relaxed text-center text-lg mb-4">More adventures await us. More memories to create. More birthdays to celebrate. More laughter, more dreams, more love. From phone calls across oceans to building our life together in Australia - we've come so far, my love.</p>
+                          <p className="text-rose-900 font-semibold text-center text-xl mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>And this is just the beginning of forever.</p>
+                          <div className="flex justify-center gap-3 text-3xl">
+                            <span>💙</span>
+                            <span>💕</span>
+                            <span>💍</span>
+                            <span>🏠</span>
+                            <span>👨‍👩‍👧‍👦</span>
+                            <span>♾️</span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+
+                    {/* Final Message */}
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, y: 50 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
+                      className="relative flex justify-center pt-8 pb-16"
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        className="bg-gradient-to-r from-blue-100/70 via-rose-100/70 to-pink-100/70 backdrop-blur-md rounded-full px-16 py-8 border-2 border-rose-300/40 shadow-2xl"
+                      >
+                        <p className="text-rose-900 font-serif text-3xl text-center font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>
+                          To My Forever Love 💫💍💕
+                        </p>
+                        <p className="text-rose-700 text-center text-lg mt-2">
+                          Shruti & Jaimin • Together Forever • ♾️
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Card View */}
+          {view === 'card' && (
+            <motion.div
+              key="card"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            >
+              <div className="max-w-3xl w-full">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Love Letter 💌
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                <motion.div
+                  initial={{ rotateY: 90, opacity: 0 }}
+                  animate={{ rotateY: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, type: 'spring' }}
+                  className="relative bg-linear-to-br from-white/60 to-rose-50/60 backdrop-blur-md rounded-3xl p-12 shadow-2xl border-2 border-rose-200/50"
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  <div className="absolute top-8 right-8 text-6xl opacity-20">💕</div>
+                  <div className="absolute bottom-8 left-8 text-6xl opacity-20">💝</div>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-xl md:text-2xl text-rose-900 leading-relaxed font-light whitespace-pre-line relative z-10"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  >
+                    {appData.cardMessage}
+                  </motion.p>
+
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 }}
+                    className="mt-8 flex justify-end"
+                  >
+                    <span className="text-2xl text-rose-700 font-semibold" style={{ fontFamily: 'Playfair Display, serif' }}>
+                      Forever yours ❤️
+                    </span>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Gift View */}
+          {view === 'gift' && (
+            <motion.div
+              key="gift"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            >
+              <div className="max-w-3xl w-full">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Your Surprise 🎁
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                  <AnimatePresence mode="wait">
+                    {!giftOpened ? (
+                      <motion.div
+                        key="gift-box"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        className="flex flex-col items-center"
+                      >
+                        <motion.p
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-2xl text-rose-800 mb-8 text-center font-light"
+                        >
+                          Click the gift to open it! 🎉
+                        </motion.p>
+
+                        <motion.div
+                          animate={giftShaking ? {
+                            rotate: [0, -5, 5, -5, 5, 0],
+                            scale: [1, 1.05, 1, 1.05, 1],
+                          } : {}}
+                          transition={{ duration: 0.5 }}
+                          onClick={handleGiftClick}
+                          className="cursor-pointer relative"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {/* Gift Box SVG */}
+                          <svg width="200" height="200" viewBox="0 0 200 200" className="drop-shadow-2xl">
+                            {/* Box Base */}
+                            <motion.rect
+                              x="40"
+                              y="80"
+                              width="120"
+                              height="100"
+                              fill="#f43f5e"
+                              stroke="#be123c"
+                              strokeWidth="3"
+                              rx="5"
+                            />
+
+                            {/* Box Lid */}
+                            <motion.g
+                              animate={giftOpened ? {
+                                y: -100,
+                                rotate: -20,
+                                opacity: 0,
+                              } : {}}
+                              transition={{ duration: 0.8, ease: 'easeOut' }}
+                            >
+                              <rect
+                                x="35"
+                                y="60"
+                                width="130"
+                                height="30"
+                                fill="#fb7185"
+                                stroke="#be123c"
+                                strokeWidth="3"
+                                rx="5"
+                              />
+                              {/* Ribbon on Lid */}
+                              <rect x="95" y="60" width="10" height="30" fill="#fbbf24" />
+                            </motion.g>
+
+                            {/* Vertical Ribbon */}
+                            <rect x="95" y="80" width="10" height="100" fill="#fbbf24" />
+
+                            {/* Bow */}
+                            <motion.g
+                              animate={giftOpened ? {
+                                y: -100,
+                                rotate: -20,
+                                opacity: 0,
+                              } : {}}
+                              transition={{ duration: 0.8, ease: 'easeOut' }}
+                            >
+                              <ellipse cx="80" cy="50" rx="20" ry="15" fill="#fbbf24" />
+                              <ellipse cx="120" cy="50" rx="20" ry="15" fill="#fbbf24" />
+                              <circle cx="100" cy="50" r="8" fill="#f59e0b" />
+                            </motion.g>
+
+                            {/* Sparkles */}
+                            <motion.g
+                              animate={{
+                                opacity: [0, 1, 0],
+                                scale: [0.5, 1, 0.5],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatDelay: 0.5,
+                              }}
+                            >
+                              <text x="20" y="40" fontSize="20">✨</text>
+                              <text x="170" y="60" fontSize="20">✨</text>
+                              <text x="30" y="150" fontSize="20">✨</text>
+                              <text x="165" y="170" fontSize="20">✨</text>
+                            </motion.g>
+                          </svg>
+                        </motion.div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="gift-message"
+                        initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ type: 'spring', duration: 0.8 }}
+                        className="text-center"
+                      >
+                        <motion.div
+                          initial={{ rotate: 0 }}
+                          animate={{ rotate: [0, 10, -10, 10, 0] }}
+                          transition={{ duration: 0.5, delay: 0.3 }}
+                          className="text-8xl mb-8"
+                        >
+                          🎉
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 }}
+                          className="bg-linear-to-br from-white/60 to-rose-50/60 backdrop-blur-md rounded-3xl p-12 shadow-2xl border-2 border-rose-200/50 max-w-2xl"
+                        >
+                          <p className="text-3xl text-rose-900 leading-relaxed font-light" style={{ fontFamily: 'Playfair Display, serif' }}>
+                            {appData.giftMessage}
+                          </p>
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
