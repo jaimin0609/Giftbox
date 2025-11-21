@@ -82,8 +82,13 @@ export default function Home() {
   const noButtonRef = useRef<HTMLButtonElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Firebase real-time listener
+  // Firebase real-time listener (optional)
   useEffect(() => {
+    if (!db) {
+      console.log('Firebase not configured, using default data');
+      return;
+    }
+
     const unsubscribe = onSnapshot(
       doc(db, 'config', 'birthday'),
       (docSnap) => {
