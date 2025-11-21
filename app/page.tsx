@@ -7,7 +7,7 @@ import { db } from '@/lib/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 import confetti from 'canvas-confetti';
 
-type ViewState = 'intro' | 'menu' | 'photos' | 'video' | 'card' | 'gift' | 'timeline';
+type ViewState = 'intro' | 'menu' | 'photos' | 'video' | 'card' | 'gift' | 'timeline' | 'cake';
 
 interface AppData {
   photos: string[];
@@ -18,6 +18,9 @@ interface AppData {
 
 export default function Home() {
   const [view, setView] = useState<ViewState>('intro');
+  const [candlesLit, setCandlesLit] = useState(true);
+  const [cakeCut, setCakeCut] = useState(false);
+  const [wishMade, setWishMade] = useState(false);
   const [appData, setAppData] = useState<AppData>({
     photos: [
       'https://res.cloudinary.com/djhid28ds/image/upload/v1763714165/IMG_1782_rgky13.jpg',
@@ -202,9 +205,52 @@ export default function Home() {
     }
   };
 
+  const handleBlowCandles = () => {
+    setCandlesLit(false);
+    setWishMade(true);
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#fda4af', '#fb7185', '#f43f5e', '#fbbf24', '#f59e0b'],
+      });
+    }, 500);
+  };
+
+  const handleCutCake = () => {
+    if (!candlesLit) {
+      setCakeCut(true);
+      const duration = 2000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval: any = setInterval(function () {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 30 * (timeLeft / duration);
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.3, 0.7), y: 0.5 },
+          colors: ['#fda4af', '#fb7185', '#f43f5e', '#fbbf24', '#f59e0b'],
+        });
+      }, 150);
+    }
+  };
+
   const menuItems = [
     { id: 'photos', icon: Camera, label: 'Our Memories', color: 'rose' },
     { id: 'timeline', icon: BookHeart, label: 'Our Journey', color: 'blue' },
+    { id: 'cake', icon: Gift, label: 'Birthday Cake', color: 'yellow' },
     { id: 'video', icon: Headphones, label: 'For You', color: 'pink' },
     { id: 'card', icon: BookHeart, label: 'Love Letter', color: 'red' },
     { id: 'gift', icon: Gift, label: 'Surprise', color: 'amber' },
@@ -1085,6 +1131,342 @@ export default function Home() {
           )}
 
           {/* Gift View */}
+          {/* Cake View */}
+          {view === 'cake' && (
+            <motion.div
+              key="cake"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            >
+              <div className="max-w-3xl w-full">
+                <div className="flex items-center justify-between mb-8">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setView('menu')}
+                    className="flex items-center gap-2 px-6 py-3 bg-white/60 backdrop-blur-md rounded-full text-rose-900 font-semibold border border-rose-200 shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    Back
+                  </motion.button>
+
+                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    Birthday Cake 🎂
+                  </h2>
+                  <div className="w-24"></div>
+                </div>
+
+                <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
+                  {/* Instructions */}
+                  {!wishMade && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-2xl text-rose-800 text-center font-light"
+                    >
+                      {candlesLit ? "Make a wish and blow the candles! 🕯️" : "Now cut the cake! 🍰"}
+                    </motion.p>
+                  )}
+
+                  {cakeCut && (
+                    <motion.p
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-3xl text-rose-900 text-center font-serif"
+                      style={{ fontFamily: 'Playfair Display, serif' }}
+                    >
+                      Happy Birthday, My Love! 🎉💝
+                    </motion.p>
+                  )}
+
+                  {/* Happy Kids celebrating */}
+                  {cakeCut && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex gap-6 items-end justify-center mb-8"
+                    >
+                      {/* Kid 1 - Boy (looks like dad) */}
+                      <motion.div
+                        animate={{
+                          y: [0, -10, 0],
+                          rotate: [-5, 5, -5]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: 0
+                        }}
+                        className="text-center"
+                      >
+                        <div className="relative">
+                          <motion.div
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                            className="text-6xl"
+                          >
+                            👦🏻
+                          </motion.div>
+                          <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                            className="absolute -top-2 -right-2 text-2xl"
+                          >
+                            ✨
+                          </motion.div>
+                        </div>
+                        <p className="text-sm text-rose-700 mt-1 font-medium">Little Jaimin</p>
+                      </motion.div>
+
+                      {/* Kid 2 - Girl (looks like mom) */}
+                      <motion.div
+                        animate={{
+                          y: [0, -15, 0],
+                          rotate: [5, -5, 5]
+                        }}
+                        transition={{
+                          duration: 2.5,
+                          repeat: Infinity,
+                          delay: 0.3
+                        }}
+                        className="text-center"
+                      >
+                        <div className="relative">
+                          <motion.div
+                            animate={{ scale: [1, 1.15, 1] }}
+                            transition={{ duration: 1.8, repeat: Infinity }}
+                            className="text-6xl"
+                          >
+                            👧🏻
+                          </motion.div>
+                          <motion.div
+                            animate={{
+                              rotate: [0, -360],
+                              scale: [1, 1.2, 1]
+                            }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                            className="absolute -top-2 -right-2 text-2xl"
+                          >
+                            💕
+                          </motion.div>
+                        </div>
+                        <p className="text-sm text-rose-700 mt-1 font-medium">Little Shruti</p>
+                      </motion.div>
+
+                      {/* Kid 3 - Another Boy */}
+                      <motion.div
+                        animate={{
+                          y: [0, -12, 0],
+                          rotate: [-3, 3, -3]
+                        }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          delay: 0.6
+                        }}
+                        className="text-center"
+                      >
+                        <div className="relative">
+                          <motion.div
+                            animate={{ scale: [1, 1.12, 1] }}
+                            transition={{ duration: 1.6, repeat: Infinity }}
+                            className="text-6xl"
+                          >
+                            👶🏻
+                          </motion.div>
+                          <motion.div
+                            animate={{
+                              y: [0, -5, 0],
+                              opacity: [1, 0.5, 1]
+                            }}
+                            transition={{ duration: 1, repeat: Infinity }}
+                            className="absolute -top-1 -right-1 text-xl"
+                          >
+                            🎈
+                          </motion.div>
+                        </div>
+                        <p className="text-sm text-rose-700 mt-1 font-medium">Baby Joy</p>
+                      </motion.div>
+                    </motion.div>
+                  )}
+
+                  {/* Cake SVG */}
+                  <div className="relative">
+                    <svg width="300" height="350" viewBox="0 0 300 350" className="drop-shadow-2xl">
+                      {/* Plate */}
+                      <ellipse cx="150" cy="320" rx="140" ry="20" fill="#e5e7eb" stroke="#9ca3af" strokeWidth="2" />
+
+                      {/* Cake Bottom Layer */}
+                      <motion.g
+                        animate={cakeCut ? {
+                          x: [-2, 2, -2, 2, 0],
+                          transition: { duration: 0.3 }
+                        } : {}}
+                      >
+                        <rect x="50" y="220" width="200" height="100" fill="#fbbf24" stroke="#f59e0b" strokeWidth="3" rx="10" />
+                        <rect x="50" y="220" width="200" height="20" fill="#fde047" rx="10" />
+                        {/* Bottom decorations */}
+                        <circle cx="80" cy="260" r="8" fill="#fb7185" />
+                        <circle cx="120" cy="260" r="8" fill="#fb7185" />
+                        <circle cx="160" cy="260" r="8" fill="#fb7185" />
+                        <circle cx="200" cy="260" r="8" fill="#fb7185" />
+                        <circle cx="220" cy="260" r="8" fill="#fb7185" />
+                        <circle cx="100" cy="290" r="8" fill="#60a5fa" />
+                        <circle cx="150" cy="290" r="8" fill="#60a5fa" />
+                        <circle cx="200" cy="290" r="8" fill="#60a5fa" />
+                      </motion.g>
+
+                      {/* Cake Top Layer */}
+                      <motion.g
+                        animate={cakeCut ? {
+                          x: [2, -2, 2, -2, 0],
+                          transition: { duration: 0.3 }
+                        } : {}}
+                      >
+                        <rect x="70" y="140" width="160" height="80" fill="#f472b6" stroke="#ec4899" strokeWidth="3" rx="10" />
+                        <rect x="70" y="140" width="160" height="20" fill="#fda4af" rx="10" />
+                        {/* Top decorations */}
+                        <circle cx="100" cy="170" r="6" fill="#fbbf24" />
+                        <circle cx="140" cy="170" r="6" fill="#fbbf24" />
+                        <circle cx="180" cy="170" r="6" fill="#fbbf24" />
+                        <circle cx="120" cy="195" r="6" fill="#60a5fa" />
+                        <circle cx="160" cy="195" r="6" fill="#60a5fa" />
+                        <circle cx="200" cy="195" r="6" fill="#60a5fa" />
+                      </motion.g>
+
+                      {/* Candles */}
+                      <g>
+                        {[90, 130, 170, 210].map((x, i) => (
+                          <g key={i}>
+                            {/* Candle body */}
+                            <rect
+                              x={x - 5}
+                              y="110"
+                              width="10"
+                              height="30"
+                              fill={i % 2 === 0 ? "#60a5fa" : "#fbbf24"}
+                              stroke={i % 2 === 0 ? "#3b82f6" : "#f59e0b"}
+                              strokeWidth="2"
+                              rx="2"
+                            />
+                            {/* Wick */}
+                            <line x1={x} y1="110" x2={x} y2="100" stroke="#4b5563" strokeWidth="2" />
+                            {/* Flame */}
+                            {candlesLit && (
+                              <motion.g
+                                animate={{
+                                  y: [0, -3, 0],
+                                  opacity: [1, 0.8, 1],
+                                }}
+                                transition={{
+                                  duration: 0.5,
+                                  repeat: Infinity,
+                                  delay: i * 0.1,
+                                }}
+                              >
+                                <ellipse cx={x} cy="95" rx="6" ry="10" fill="#fbbf24" opacity="0.8" />
+                                <ellipse cx={x} cy="95" rx="4" ry="7" fill="#fde047" />
+                                <ellipse cx={x} cy="97" rx="2" ry="4" fill="#fef08a" />
+                              </motion.g>
+                            )}
+                            {/* Smoke after blowing */}
+                            {!candlesLit && (
+                              <motion.g
+                                initial={{ opacity: 1, y: 0 }}
+                                animate={{ opacity: 0, y: -30 }}
+                                transition={{ duration: 2 }}
+                              >
+                                <text x={x - 8} y="95" fontSize="16" opacity="0.5">💨</text>
+                              </motion.g>
+                            )}
+                          </g>
+                        ))}
+                      </g>
+
+                      {/* Cake cut slice */}
+                      {cakeCut && (
+                        <motion.g
+                          initial={{ x: 0, y: 0, rotate: 0 }}
+                          animate={{
+                            x: 80,
+                            y: -30,
+                            rotate: 25,
+                          }}
+                          transition={{ duration: 1, type: "spring" }}
+                        >
+                          {/* Slice of cake */}
+                          <path
+                            d="M 150 220 L 180 220 L 185 160 L 155 160 Z"
+                            fill="#f472b6"
+                            stroke="#ec4899"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M 150 220 L 180 220 L 175 280 L 145 280 Z"
+                            fill="#fbbf24"
+                            stroke="#f59e0b"
+                            strokeWidth="2"
+                          />
+                          <line x1="150" y1="200" x2="180" y2="200" stroke="#fda4af" strokeWidth="3" />
+                          <line x1="148" y1="250" x2="177" y2="250" stroke="#fde047" strokeWidth="3" />
+                        </motion.g>
+                      )}
+
+                      {/* Sparkles */}
+                      {(wishMade || cakeCut) && (
+                        <motion.g
+                          animate={{
+                            opacity: [0, 1, 0],
+                            scale: [0.5, 1, 0.5],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                          }}
+                        >
+                          <text x="20" y="100" fontSize="24">✨</text>
+                          <text x="260" y="120" fontSize="24">✨</text>
+                          <text x="30" y="280" fontSize="24">✨</text>
+                          <text x="250" y="300" fontSize="24">✨</text>
+                        </motion.g>
+                      )}
+                    </svg>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-4">
+                    {candlesLit && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleBlowCandles}
+                        className="px-8 py-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white text-xl font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all"
+                      >
+                        💨 Blow Candles
+                      </motion.button>
+                    )}
+
+                    {!candlesLit && !cakeCut && (
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCutCake}
+                        className="px-8 py-4 bg-gradient-to-r from-rose-400 to-pink-500 text-white text-xl font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all"
+                      >
+                        🔪 Cut Cake
+                      </motion.button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {view === 'gift' && (
             <motion.div
               key="gift"
