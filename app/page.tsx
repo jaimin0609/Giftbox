@@ -1917,7 +1917,6 @@ export default function Home() {
                         >
                           <span className="text-xl">✅</span>
                           <span className="font-semibold">Booking Confirmed!</span>
-                          <span className="text-sm text-green-600">Ref: RS0Y4EQ</span>
                         </motion.div>
                       </motion.div>
                     )}
