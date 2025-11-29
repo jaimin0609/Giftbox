@@ -260,9 +260,28 @@ export default function Home() {
     <div className="min-h-screen bg-linear-to-br from-rose-50 via-blue-50 to-pink-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-10 left-10 w-72 h-72 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+        <div className="absolute top-0 right-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+
+        {/* Floating Hearts */}
+        <div className="absolute animate-float-slow" style={{ top: '10%', left: '5%' }}><span className="text-4xl opacity-40">💕</span></div>
+        <div className="absolute animate-float-medium" style={{ top: '20%', right: '10%' }}><span className="text-3xl opacity-30">💖</span></div>
+        <div className="absolute animate-float-fast" style={{ top: '60%', left: '8%' }}><span className="text-2xl opacity-35">💗</span></div>
+        <div className="absolute animate-float-slow" style={{ top: '70%', right: '5%' }}><span className="text-4xl opacity-25">💝</span></div>
+        <div className="absolute animate-float-medium" style={{ top: '40%', left: '3%' }}><span className="text-3xl opacity-30">✨</span></div>
+        <div className="absolute animate-float-fast" style={{ top: '30%', right: '3%' }}><span className="text-2xl opacity-35">💫</span></div>
+        <div className="absolute animate-float-slow" style={{ top: '80%', left: '15%' }}><span className="text-3xl opacity-25">🌸</span></div>
+        <div className="absolute animate-float-medium" style={{ top: '15%', left: '20%' }}><span className="text-2xl opacity-30">🦋</span></div>
+        <div className="absolute animate-float-fast" style={{ top: '50%', right: '15%' }}><span className="text-3xl opacity-35">💐</span></div>
+        <div className="absolute animate-float-slow" style={{ top: '85%', right: '20%' }}><span className="text-4xl opacity-30">🌹</span></div>
+
+        {/* Sparkle particles */}
+        <div className="absolute animate-sparkle" style={{ top: '25%', left: '30%' }}><span className="text-xl">✦</span></div>
+        <div className="absolute animate-sparkle animation-delay-2000" style={{ top: '45%', right: '25%' }}><span className="text-lg">✦</span></div>
+        <div className="absolute animate-sparkle animation-delay-4000" style={{ top: '65%', left: '40%' }}><span className="text-xl">✦</span></div>
+        <div className="absolute animate-sparkle" style={{ top: '35%', right: '35%' }}><span className="text-lg">✦</span></div>
       </div>
 
       {/* Toast Notification */}
@@ -291,15 +310,33 @@ export default function Home() {
               exit={{ opacity: 0 }}
               className="min-h-screen flex flex-col items-center justify-center px-4"
             >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, type: 'spring' }}
+                className="text-6xl mb-6"
+              >
+                💖✨💖
+              </motion.div>
+
               <motion.h1
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                className="text-7xl md:text-9xl font-serif text-rose-900 mb-16 text-center"
+                initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
+                className="text-7xl md:text-9xl font-serif text-rose-900 mb-8 text-center bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 bg-clip-text text-transparent"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Hi, Shruti! 💝
               </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="text-xl text-rose-700 mb-12 text-center font-light italic"
+              >
+                ✨ My beautiful queen, my everything ✨
+              </motion.p>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -369,14 +406,34 @@ export default function Home() {
               exit={{ opacity: 0 }}
               className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
             >
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: 'spring', duration: 1 }}
+                className="text-5xl mb-4"
+              >
+                💝
+              </motion.div>
+
               <motion.h2
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-5xl md:text-7xl font-serif text-rose-900 mb-16 text-center"
+                className="text-5xl md:text-7xl font-serif mb-4 text-center bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 bg-clip-text text-transparent"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                Made with Love for You 💐
+                Made with Love for You
               </motion.h2>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="flex items-center gap-3 mb-12"
+              >
+                <span className="text-3xl">🌹</span>
+                <span className="text-rose-600 font-light italic">From your Hubby with endless love</span>
+                <span className="text-3xl">🌹</span>
+              </motion.div>
 
               <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full"
@@ -392,25 +449,47 @@ export default function Home() {
                   },
                 }}
               >
-                {menuItems.map((item) => (
+                {menuItems.map((item, index) => (
                   <motion.div
                     key={item.id}
                     variants={{
-                      hidden: { opacity: 0, scale: 0.8 },
-                      visible: { opacity: 1, scale: 1 },
+                      hidden: { opacity: 0, scale: 0.8, y: 50 },
+                      visible: { opacity: 1, scale: 1, y: 0 },
                     }}
-                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileHover={{ scale: 1.08, y: -10, rotateZ: 1 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setView(item.id as ViewState)}
-                    className="group relative bg-white/40 backdrop-blur-md rounded-3xl p-8 cursor-pointer border border-rose-200/50 shadow-xl hover:shadow-2xl transition-all overflow-hidden"
+                    className="group relative bg-white/50 backdrop-blur-lg rounded-3xl p-8 cursor-pointer border-2 border-rose-200/60 shadow-xl hover:shadow-[0_20px_60px_-10px_rgba(244,63,94,0.4)] transition-all duration-300 overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-linear-to-br from-rose-100/50 to-pink-100/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    {/* Animated gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-100/60 via-pink-100/60 to-purple-100/60 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+
+                    {/* Sparkle decorations */}
+                    <motion.div
+                      animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                      className="absolute top-3 right-3 text-xl opacity-0 group-hover:opacity-60 transition-opacity"
+                    >
+                      ✨
+                    </motion.div>
+                    <motion.div
+                      animate={{ rotate: -360, scale: [1, 1.3, 1] }}
+                      transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                      className="absolute bottom-3 left-3 text-lg opacity-0 group-hover:opacity-60 transition-opacity"
+                    >
+                      💫
+                    </motion.div>
 
                     <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-                      <div className="p-6 bg-linear-to-br from-blue-400 to-rose-400 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow">
-                        <item.icon className="w-12 h-12 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-semibold text-rose-900">{item.label}</h3>
+                      <motion.div
+                        whileHover={{ rotate: [0, -10, 10, 0] }}
+                        transition={{ duration: 0.5 }}
+                        className="p-6 bg-gradient-to-br from-rose-400 via-pink-400 to-rose-500 rounded-2xl shadow-lg group-hover:shadow-2xl group-hover:shadow-rose-300/50 transition-all duration-300"
+                      >
+                        <item.icon className="w-12 h-12 text-white drop-shadow-lg" />
+                      </motion.div>
+                      <h3 className="text-2xl font-semibold text-rose-900 group-hover:text-rose-700 transition-colors">{item.label}</h3>
+                      <div className="h-1 w-12 bg-gradient-to-r from-rose-300 to-pink-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                   </motion.div>
                 ))}
@@ -1076,21 +1155,49 @@ export default function Home() {
                     Back
                   </motion.button>
 
-                  <h2 className="text-4xl md:text-5xl font-serif text-rose-900 text-center flex-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  <h2 className="text-4xl md:text-5xl font-serif text-center flex-1 bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 bg-clip-text text-transparent" style={{ fontFamily: 'Playfair Display, serif' }}>
                     Love Letter 💌
                   </h2>
                   <div className="w-24"></div>
                 </div>
 
                 <motion.div
-                  initial={{ rotateY: 90, opacity: 0 }}
-                  animate={{ rotateY: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, type: 'spring' }}
-                  className="relative bg-linear-to-br from-white/60 to-rose-50/60 backdrop-blur-md rounded-3xl p-12 shadow-2xl border-2 border-rose-200/50"
+                  initial={{ rotateY: 90, opacity: 0, scale: 0.8 }}
+                  animate={{ rotateY: 0, opacity: 1, scale: 1 }}
+                  transition={{ duration: 1, type: 'spring' }}
+                  className="relative bg-gradient-to-br from-white/80 via-rose-50/80 to-pink-50/80 backdrop-blur-lg rounded-3xl p-12 shadow-[0_20px_60px_-10px_rgba(244,63,94,0.3)] border-2 border-rose-200/60"
                   style={{ transformStyle: 'preserve-3d' }}
                 >
-                  <div className="absolute top-8 right-8 text-6xl opacity-20">💕</div>
-                  <div className="absolute bottom-8 left-8 text-6xl opacity-20">💝</div>
+                  {/* Decorative corners */}
+                  <div className="absolute top-4 left-4 text-4xl">💐</div>
+                  <div className="absolute top-4 right-4 text-4xl">🌹</div>
+                  <div className="absolute bottom-4 left-4 text-4xl">💕</div>
+                  <div className="absolute bottom-4 right-4 text-4xl">💝</div>
+
+                  {/* Floating hearts animation */}
+                  <motion.div
+                    animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="absolute top-1/4 right-6 text-3xl opacity-30"
+                  >
+                    ❤️
+                  </motion.div>
+                  <motion.div
+                    animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                    className="absolute bottom-1/4 left-6 text-2xl opacity-25"
+                  >
+                    💗
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-center mb-6"
+                  >
+                    <span className="text-xl text-rose-600 font-light italic">My Dearest Shruti...</span>
+                  </motion.div>
 
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
@@ -1106,11 +1213,24 @@ export default function Home() {
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-8 flex justify-end"
+                    className="mt-10 flex flex-col items-end gap-2"
                   >
                     <span className="text-2xl text-rose-700 font-semibold" style={{ fontFamily: 'Playfair Display, serif' }}>
-                      Forever yours ❤️
+                      Forever & Always ❤️
                     </span>
+                    <span className="text-lg text-rose-500 font-light italic">
+                      Your loving husband, Jaimin 💍
+                    </span>
+                  </motion.div>
+
+                  {/* Animated heart seal */}
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 1, type: 'spring' }}
+                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full p-4 shadow-xl"
+                  >
+                    <span className="text-3xl">💌</span>
                   </motion.div>
                 </motion.div>
               </div>
@@ -1158,14 +1278,37 @@ export default function Home() {
                   )}
 
                   {cakeCut && (
-                    <motion.p
-                      initial={{ opacity: 0, scale: 0.8 }}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="text-3xl text-rose-900 text-center font-serif"
-                      style={{ fontFamily: 'Playfair Display, serif' }}
+                      transition={{ type: 'spring', duration: 0.8 }}
+                      className="text-center"
                     >
-                      Happy Birthday, My Love! 🎉💝
-                    </motion.p>
+                      <motion.div
+                        animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="text-5xl mb-4"
+                      >
+                        🎂✨🎉
+                      </motion.div>
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-4xl md:text-5xl text-rose-900 text-center font-serif bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 bg-clip-text text-transparent"
+                        style={{ fontFamily: 'Playfair Display, serif' }}
+                      >
+                        Happy Birthday, My Love! 💝
+                      </motion.p>
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-xl text-rose-700 mt-3 font-light italic"
+                      >
+                        You make every day sweeter than cake! 🍰💕
+                      </motion.p>
+                    </motion.div>
                   )}
 
                   {/* Happy Kids celebrating */}
