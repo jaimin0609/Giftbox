@@ -323,7 +323,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 50, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
-                className="text-7xl md:text-9xl font-serif text-rose-900 mb-8 text-center bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 bg-clip-text text-transparent"
+                className="text-7xl md:text-9xl font-serif mb-8 text-center bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 bg-clip-text text-transparent"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Hi, Shruti! 💝
@@ -335,7 +335,7 @@ export default function Home() {
                 transition={{ delay: 0.8 }}
                 className="text-xl text-rose-700 mb-12 text-center font-light italic"
               >
-                ✨ My beautiful queen, my everything ✨
+                ✨ Happy Birthday baby! ✨
               </motion.p>
 
               <motion.div
@@ -1295,7 +1295,7 @@ export default function Home() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-4xl md:text-5xl text-rose-900 text-center font-serif bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 bg-clip-text text-transparent"
+                        className="text-4xl md:text-5xl text-center font-serif bg-gradient-to-r from-rose-600 via-pink-500 to-rose-600 bg-clip-text text-transparent"
                         style={{ fontFamily: 'Playfair Display, serif' }}
                       >
                         Happy Birthday, My Love! 💝
@@ -1732,26 +1732,192 @@ export default function Home() {
                         initial={{ opacity: 0, scale: 0.8, y: 50 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         transition={{ type: 'spring', duration: 0.8 }}
-                        className="text-center"
+                        className="text-center max-w-4xl mx-auto"
                       >
                         <motion.div
                           initial={{ rotate: 0 }}
                           animate={{ rotate: [0, 10, -10, 10, 0] }}
                           transition={{ duration: 0.5, delay: 0.3 }}
-                          className="text-8xl mb-8"
+                          className="text-8xl mb-6"
                         >
                           🎉
                         </motion.div>
 
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.4 }}
+                          className="text-2xl text-rose-700 mb-8 font-light"
+                        >
+                          Happy Birthday, My Love! Your special gift awaits...
+                        </motion.p>
+
+                        {/* Helicopter Voucher Card */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 30, rotateX: 20 }}
+                          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                          transition={{ delay: 0.6, duration: 0.8, type: 'spring' }}
+                          className="relative bg-gradient-to-br from-sky-50 via-white to-cyan-50 backdrop-blur-md rounded-3xl overflow-hidden shadow-[0_20px_60px_-10px_rgba(14,165,233,0.4)] border-2 border-sky-200/60"
+                        >
+                          {/* Header Banner */}
+                          <div className="bg-gradient-to-r from-sky-500 via-cyan-500 to-sky-600 px-8 py-6 relative overflow-hidden">
+                            <motion.div
+                              animate={{ x: [0, 100, 0] }}
+                              transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+                              className="absolute inset-0 opacity-20"
+                              style={{
+                                backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M30 5 L35 25 L55 30 L35 35 L30 55 L25 35 L5 30 L25 25 Z\' fill=\'white\' fill-opacity=\'0.3\'/%3E%3C/svg%3E")',
+                                backgroundSize: '60px 60px',
+                              }}
+                            />
+                            <div className="relative z-10 flex items-center justify-between">
+                              <div>
+                                <p className="text-white/80 text-sm font-medium tracking-wider uppercase">Experience Voucher</p>
+                                <h3 className="text-white text-3xl font-bold mt-1" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                  🚁 Scenic Helicopter Flight
+                                </h3>
+                              </div>
+                              <motion.div
+                                animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="text-6xl"
+                              >
+                                🚁
+                              </motion.div>
+                            </div>
+                          </div>
+
+                          {/* Voucher Content */}
+                          <div className="p-8">
+                            {/* Main Experience */}
+                            <div className="text-center mb-8">
+                              <h4 className="text-2xl font-bold text-sky-800 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                Perth&apos;s Beaches, Fremantle & Swan River
+                              </h4>
+                              <p className="text-sky-600 text-lg">
+                                A thrilling flight over Perth&apos;s stunning coast! ✨
+                              </p>
+                            </div>
+
+                            {/* Experience Details */}
+                            <div className="grid md:grid-cols-2 gap-6 mb-8">
+                              <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.9 }}
+                                className="bg-gradient-to-br from-sky-100/80 to-cyan-100/80 rounded-2xl p-5 border border-sky-200/50"
+                              >
+                                <p className="text-sky-500 text-sm font-semibold uppercase tracking-wide mb-2">📅 Booked For</p>
+                                <p className="text-sky-900 text-xl font-bold">Saturday, 3rd January 2026</p>
+                                <p className="text-sky-600 mt-1">9:30 AM • 2 Passengers</p>
+                              </motion.div>
+
+                              <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 1.0 }}
+                                className="bg-gradient-to-br from-cyan-100/80 to-sky-100/80 rounded-2xl p-5 border border-sky-200/50"
+                              >
+                                <p className="text-sky-500 text-sm font-semibold uppercase tracking-wide mb-2">⏱️ Duration</p>
+                                <p className="text-sky-900 text-xl font-bold">20-Minute Flight</p>
+                                <p className="text-sky-600 mt-1">+ Safety Briefing</p>
+                              </motion.div>
+                            </div>
+
+                            {/* What's Included */}
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 1.1 }}
+                              className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-6 mb-8 border border-amber-200/50"
+                            >
+                              <p className="text-amber-700 font-bold text-lg mb-4 flex items-center gap-2">
+                                <span className="text-2xl">🌟</span> What&apos;s Included
+                              </p>
+                              <div className="grid md:grid-cols-2 gap-3">
+                                <div className="flex items-center gap-3 text-amber-800">
+                                  <span className="text-xl">🏖️</span>
+                                  <span>Cottesloe Beach aerial views</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-amber-800">
+                                  <span className="text-xl">🌊</span>
+                                  <span>Fremantle Port & Swan River</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-amber-800">
+                                  <span className="text-xl">🏝️</span>
+                                  <span>Leighton Beach coastline</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-amber-800">
+                                  <span className="text-xl">🅿️</span>
+                                  <span>On-site parking included</span>
+                                </div>
+                              </div>
+                            </motion.div>
+
+                            {/* Location */}
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 1.2 }}
+                              className="text-center bg-gradient-to-r from-rose-100/60 to-pink-100/60 rounded-xl p-5 border border-rose-200/40"
+                            >
+                              <p className="text-rose-500 text-sm font-semibold uppercase tracking-wide mb-1">📍 Departure Location</p>
+                              <p className="text-rose-800 font-semibold">Jandakot Heli-Co</p>
+                              <p className="text-rose-600 text-sm">8 Bell Court, Jandakot, WA 6164</p>
+                            </motion.div>
+
+                            {/* Romantic Footer Message */}
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 1.4 }}
+                              className="mt-8 text-center"
+                            >
+                              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg">
+                                <span className="text-2xl">💕</span>
+                                <span className="font-semibold text-lg">For You & Me - Flying Together!</span>
+                                <span className="text-2xl">💕</span>
+                              </div>
+                              <p className="text-rose-600 mt-4 text-lg italic" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                Let&apos;s soar through the skies together, my love! 🌅✨
+                              </p>
+                            </motion.div>
+                          </div>
+
+                          {/* Decorative Elements */}
+                          <motion.div
+                            animate={{ opacity: [0.5, 1, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="absolute top-20 left-4 text-2xl"
+                          >
+                            ✨
+                          </motion.div>
+                          <motion.div
+                            animate={{ opacity: [0.5, 1, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                            className="absolute top-32 right-4 text-2xl"
+                          >
+                            ⭐
+                          </motion.div>
+                          <motion.div
+                            animate={{ opacity: [0.5, 1, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                            className="absolute bottom-20 left-6 text-xl"
+                          >
+                            💫
+                          </motion.div>
+                        </motion.div>
+
+                        {/* Confirmation Badge */}
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5 }}
-                          className="bg-linear-to-br from-white/60 to-rose-50/60 backdrop-blur-md rounded-3xl p-12 shadow-2xl border-2 border-rose-200/50 max-w-2xl"
+                          transition={{ delay: 1.6 }}
+                          className="mt-6 inline-flex items-center gap-2 bg-green-100 text-green-700 px-6 py-3 rounded-full border border-green-300"
                         >
-                          <p className="text-3xl text-rose-900 leading-relaxed font-light" style={{ fontFamily: 'Playfair Display, serif' }}>
-                            {appData.giftMessage}
-                          </p>
+                          <span className="text-xl">✅</span>
+                          <span className="font-semibold">Booking Confirmed!</span>
+                          <span className="text-sm text-green-600">Ref: RS0Y4EQ</span>
                         </motion.div>
                       </motion.div>
                     )}
