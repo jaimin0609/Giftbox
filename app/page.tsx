@@ -948,7 +948,7 @@ export default function Home() {
                       </div>
                     </motion.div>
 
-                    {/* 7. First Birthday in Australia - January 3, 2024 */}
+                    {/* 7. First Birthday in Australia - January 4, 2024 */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0, scale: 0.8 },
@@ -971,14 +971,14 @@ export default function Home() {
                             🎂
                           </div>
                           <p className="text-xs text-pink-700 font-bold mb-2 uppercase tracking-wide">🎈 Your First Birthday With Me</p>
-                          <p className="text-sm text-pink-600 font-semibold mb-2">January 3, 2024</p>
+                          <p className="text-sm text-pink-600 font-semibold mb-2">January 4, 2024</p>
                           <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Birthday #1 Together! 🎉💕</h3>
                           <p className="text-rose-800 leading-relaxed">Your first birthday in Australia, and my first time celebrating YOUR special day with you by my side! I finally got to wake you up with birthday wishes, see your smile all day, and make you feel as special as you make me feel every single day. 🎊💖</p>
                         </motion.div>
                       </div>
                     </motion.div>
 
-                    {/* 8. Most Recent Birthday - January 3, 2025 */}
+                    {/* 8. Most Recent Birthday - January 4, 2025 */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0, scale: 0.8 },
@@ -1001,14 +1001,14 @@ export default function Home() {
                             🎂
                           </div>
                           <p className="text-xs text-fuchsia-700 font-bold mb-2 uppercase tracking-wide">🎈 Your Last Birthday</p>
-                          <p className="text-sm text-fuchsia-600 font-semibold mb-2">January 3, 2025</p>
+                          <p className="text-sm text-fuchsia-600 font-semibold mb-2">January 4, 2025</p>
                           <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Birthday #2 Together! 🎊💖</h3>
                           <p className="text-rose-800 leading-relaxed">Your most recent birthday! Another beautiful year with you, another celebration of the amazing person you are. Each year with you gets better and better. Watching you grow, laugh, and shine makes every day brighter! 🎉✨</p>
                         </motion.div>
                       </div>
                     </motion.div>
 
-                    {/* 9. Next Birthday - January 3, 2026 */}
+                    {/* 9. Next Birthday - January 4, 2026 */}
                     <motion.div
                       variants={{
                         hidden: { opacity: 0, scale: 0.8 },
@@ -1031,7 +1031,7 @@ export default function Home() {
                             🎂
                           </div>
                           <p className="text-xs text-violet-700 font-bold mb-2 uppercase tracking-wide">🎈 Coming Soon!</p>
-                          <p className="text-sm text-violet-600 font-semibold mb-2">January 3, 2026</p>
+                          <p className="text-sm text-violet-600 font-semibold mb-2">January 4, 2026</p>
                           <h3 className="text-2xl md:text-3xl font-serif text-rose-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>Your Next Birthday! 🎊💜</h3>
                           <p className="text-rose-800 leading-relaxed">Just around the corner! I can't wait to celebrate you again, to see your eyes light up, to make you smile. Every birthday with you is a gift to me. I'm already planning how to make this one even more special! 🎁✨</p>
                         </motion.div>
@@ -1808,7 +1808,7 @@ export default function Home() {
                                 className="bg-gradient-to-br from-sky-100/80 to-cyan-100/80 rounded-2xl p-5 border border-sky-200/50"
                               >
                                 <p className="text-sky-500 text-sm font-semibold uppercase tracking-wide mb-2">📅 Booked For</p>
-                                <p className="text-sky-900 text-xl font-bold">Saturday, 3rd January 2026</p>
+                                <p className="text-sky-900 text-xl font-bold">Saturday, 4th January 2026</p>
                                 <p className="text-sky-600 mt-1">9:30 AM • 2 Passengers</p>
                               </motion.div>
 
