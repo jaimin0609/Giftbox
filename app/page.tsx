@@ -80,6 +80,10 @@ export default function Home() {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [giftOpened, setGiftOpened] = useState(false);
   const [giftShaking, setGiftShaking] = useState(false);
+  const [giftUnlocked, setGiftUnlocked] = useState(false);
+  const [secretCode, setSecretCode] = useState(['', '', '', '']);
+  const [codeError, setCodeError] = useState(false);
+  const codeInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
   const noButtonRef = useRef<HTMLButtonElement>(null);
@@ -162,6 +166,52 @@ export default function Home() {
   const handleNoButtonClick = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
+  };
+
+  // Secret code: 0305 (Your wedding date - May 3rd!)
+  const SECRET_CODE = '0305';
+
+  const handleCodeInput = (index: number, value: string) => {
+    if (value.length > 1) value = value.slice(-1);
+    if (!/^\d*$/.test(value)) return; // Only allow digits
+
+    const newCode = [...secretCode];
+    newCode[index] = value;
+    setSecretCode(newCode);
+    setCodeError(false);
+
+    // Auto-focus next input
+    if (value && index < 3) {
+      codeInputRefs.current[index + 1]?.focus();
+    }
+
+    // Check if code is complete
+    if (newCode.every(digit => digit !== '')) {
+      const enteredCode = newCode.join('');
+      if (enteredCode === SECRET_CODE) {
+        // Correct code!
+        setGiftUnlocked(true);
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#fda4af', '#fb7185', '#f43f5e', '#fbbf24', '#f59e0b'],
+        });
+      } else {
+        // Wrong code - shake and reset
+        setCodeError(true);
+        setTimeout(() => {
+          setSecretCode(['', '', '', '']);
+          codeInputRefs.current[0]?.focus();
+        }, 500);
+      }
+    }
+  };
+
+  const handleCodeKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !secretCode[index] && index > 0) {
+      codeInputRefs.current[index - 1]?.focus();
+    }
   };
 
   const handleGiftClick = () => {
@@ -1625,7 +1675,100 @@ export default function Home() {
 
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
                   <AnimatePresence mode="wait">
-                    {!giftOpened ? (
+                    {/* Step 1: Enter Secret Code */}
+                    {!giftUnlocked && !giftOpened && (
+                      <motion.div
+                        key="code-entry"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="flex flex-col items-center"
+                      >
+                        {/* Lock Icon */}
+                        <motion.div
+                          animate={{
+                            scale: [1, 1.1, 1],
+                            rotate: codeError ? [0, -10, 10, -10, 10, 0] : 0
+                          }}
+                          transition={{
+                            scale: { duration: 2, repeat: Infinity },
+                            rotate: { duration: 0.5 }
+                          }}
+                          className="text-7xl mb-6"
+                        >
+                          🔐
+                        </motion.div>
+
+                        <motion.h3
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-3xl md:text-4xl font-serif text-rose-900 mb-4 text-center"
+                          style={{ fontFamily: 'Playfair Display, serif' }}
+                        >
+                          Enter the Secret Code
+                        </motion.h3>
+
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 }}
+                          className="text-lg text-rose-600 mb-8 text-center font-light"
+                        >
+                          💡 Hint: The day we became one forever! 💍
+                        </motion.p>
+
+                        {/* Code Input Boxes */}
+                        <motion.div
+                          animate={codeError ? { x: [-10, 10, -10, 10, 0] } : {}}
+                          transition={{ duration: 0.4 }}
+                          className="flex gap-4 mb-6"
+                        >
+                          {[0, 1, 2, 3].map((index) => (
+                            <motion.input
+                              key={index}
+                              ref={(el) => { codeInputRefs.current[index] = el; }}
+                              type="text"
+                              inputMode="numeric"
+                              maxLength={1}
+                              value={secretCode[index]}
+                              onChange={(e) => handleCodeInput(index, e.target.value)}
+                              onKeyDown={(e) => handleCodeKeyDown(index, e)}
+                              className={`w-16 h-20 text-center text-3xl font-bold rounded-2xl border-3 outline-none transition-all duration-300 ${codeError
+                                  ? 'border-red-400 bg-red-50 text-red-600'
+                                  : secretCode[index]
+                                    ? 'border-rose-400 bg-rose-50 text-rose-700'
+                                    : 'border-rose-200 bg-white/80 text-rose-900'
+                                } focus:border-rose-500 focus:ring-4 focus:ring-rose-200 shadow-lg`}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 + index * 0.1 }}
+                            />
+                          ))}
+                        </motion.div>
+
+                        {codeError && (
+                          <motion.p
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-red-500 font-medium mb-4"
+                          >
+                            ❌ Oops! That's not right. Try again, my love! 💕
+                          </motion.p>
+                        )}
+
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.6 }}
+                          className="text-sm text-rose-400 text-center"
+                        >
+                          Format: DDMM (Day & Month) 📅
+                        </motion.p>
+                      </motion.div>
+                    )}
+
+                    {/* Step 2: Gift Box (after code is correct) */}
+                    {giftUnlocked && !giftOpened && (
                       <motion.div
                         key="gift-box"
                         initial={{ opacity: 0, scale: 0.5 }}
@@ -1633,12 +1776,22 @@ export default function Home() {
                         exit={{ opacity: 0, scale: 0.5 }}
                         className="flex flex-col items-center"
                       >
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ type: 'spring', duration: 0.8 }}
+                          className="text-5xl mb-4"
+                        >
+                          🎊 Unlocked! 🎊
+                        </motion.div>
+
                         <motion.p
                           initial={{ opacity: 0, y: -20 }}
                           animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
                           className="text-2xl text-rose-800 mb-8 text-center font-light"
                         >
-                          Click the gift to open it! 🎉
+                          Now click the gift to open it! 🎉
                         </motion.p>
 
                         <motion.div
@@ -1726,7 +1879,10 @@ export default function Home() {
                           </svg>
                         </motion.div>
                       </motion.div>
-                    ) : (
+                    )}
+
+                    {/* Step 3: Gift Revealed */}
+                    {giftOpened && (
                       <motion.div
                         key="gift-message"
                         initial={{ opacity: 0, scale: 0.8, y: 50 }}
