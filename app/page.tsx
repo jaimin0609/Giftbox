@@ -1712,9 +1712,9 @@ export default function Home() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.2 }}
-                          className="text-lg text-rose-600 mb-8 text-center font-light"
+                          className="text-lg text-rose-600 mb-8 text-center font-light max-w-md"
                         >
-                          💡 Hint: The day we became one forever! 💍
+                          💡 Hint: don't know the code? Just trust your heart... ✨
                         </motion.p>
 
                         {/* Code Input Boxes */}
@@ -1734,10 +1734,10 @@ export default function Home() {
                               onChange={(e) => handleCodeInput(index, e.target.value)}
                               onKeyDown={(e) => handleCodeKeyDown(index, e)}
                               className={`w-16 h-20 text-center text-3xl font-bold rounded-2xl border-3 outline-none transition-all duration-300 ${codeError
-                                  ? 'border-red-400 bg-red-50 text-red-600'
-                                  : secretCode[index]
-                                    ? 'border-rose-400 bg-rose-50 text-rose-700'
-                                    : 'border-rose-200 bg-white/80 text-rose-900'
+                                ? 'border-red-400 bg-red-50 text-red-600'
+                                : secretCode[index]
+                                  ? 'border-rose-400 bg-rose-50 text-rose-700'
+                                  : 'border-rose-200 bg-white/80 text-rose-900'
                                 } focus:border-rose-500 focus:ring-4 focus:ring-rose-200 shadow-lg`}
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -1762,7 +1762,7 @@ export default function Home() {
                           transition={{ delay: 0.6 }}
                           className="text-sm text-rose-400 text-center"
                         >
-                          Format: DDMM (Day & Month) 📅
+                          🔢 anything after 0 only numbers are allowed!
                         </motion.p>
                       </motion.div>
                     )}
