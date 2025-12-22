@@ -1908,15 +1908,15 @@ export default function Home() {
                           Happy Birthday, My Love! Your special gift awaits...
                         </motion.p>
 
-                        {/* Helicopter Voucher Card */}
+                        {/* Mystery Surprise Card */}
                         <motion.div
                           initial={{ opacity: 0, y: 30, rotateX: 20 }}
                           animate={{ opacity: 1, y: 0, rotateX: 0 }}
                           transition={{ delay: 0.6, duration: 0.8, type: 'spring' }}
-                          className="relative bg-gradient-to-br from-sky-50 via-white to-cyan-50 backdrop-blur-md rounded-3xl overflow-hidden shadow-[0_20px_60px_-10px_rgba(14,165,233,0.4)] border-2 border-sky-200/60"
+                          className="relative bg-gradient-to-br from-purple-50 via-white to-pink-50 backdrop-blur-md rounded-3xl overflow-hidden shadow-[0_20px_60px_-10px_rgba(168,85,247,0.4)] border-2 border-purple-200/60"
                         >
                           {/* Header Banner */}
-                          <div className="bg-gradient-to-r from-sky-500 via-cyan-500 to-sky-600 px-8 py-6 relative overflow-hidden">
+                          <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 px-8 py-6 relative overflow-hidden">
                             <motion.div
                               animate={{ x: [0, 100, 0] }}
                               transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
@@ -1928,59 +1928,66 @@ export default function Home() {
                             />
                             <div className="relative z-10 flex items-center justify-between">
                               <div>
-                                <p className="text-white/80 text-sm font-medium tracking-wider uppercase">Experience Voucher</p>
+                                <p className="text-white/80 text-sm font-medium tracking-wider uppercase">Birthday Surprise</p>
                                 <h3 className="text-white text-3xl font-bold mt-1" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                  🚁 Scenic Helicopter Flight
+                                  🎁 A Special Adventure Awaits!
                                 </h3>
                               </div>
                               <motion.div
-                                animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
-                                transition={{ duration: 3, repeat: Infinity }}
+                                animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
                                 className="text-6xl"
                               >
-                                🚁
+                                ✨
                               </motion.div>
                             </div>
                           </div>
 
                           {/* Voucher Content */}
                           <div className="p-8">
-                            {/* Main Experience */}
+                            {/* Mystery Message */}
                             <div className="text-center mb-8">
-                              <h4 className="text-2xl font-bold text-sky-800 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Perth&apos;s Beaches, Fremantle & Swan River
+                              <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="text-6xl mb-4"
+                              >
+                                🤫
+                              </motion.div>
+                              <h4 className="text-2xl font-bold text-purple-800 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                It&apos;s a Surprise!
                               </h4>
-                              <p className="text-sky-600 text-lg">
-                                A thrilling flight over Perth&apos;s stunning coast! ✨
+                              <p className="text-purple-600 text-lg">
+                                Something unforgettable is waiting for you... 💝
                               </p>
                             </div>
 
-                            {/* Experience Details */}
+                            {/* Experience Details - Only Time & Essential Info */}
                             <div className="grid md:grid-cols-2 gap-6 mb-8">
                               <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.9 }}
-                                className="bg-gradient-to-br from-sky-100/80 to-cyan-100/80 rounded-2xl p-5 border border-sky-200/50"
+                                className="bg-gradient-to-br from-purple-100/80 to-pink-100/80 rounded-2xl p-5 border border-purple-200/50"
                               >
-                                <p className="text-sky-500 text-sm font-semibold uppercase tracking-wide mb-2">📅 Booked For</p>
-                                <p className="text-sky-900 text-xl font-bold">Saturday, 4th January 2026</p>
-                                <p className="text-sky-600 mt-1">9:30 AM • 2 Passengers</p>
+                                <p className="text-purple-500 text-sm font-semibold uppercase tracking-wide mb-2">📅 Save The Date</p>
+                                <p className="text-purple-900 text-xl font-bold">Saturday, 4th January 2026</p>
+                                <p className="text-purple-600 mt-1">⏰ Be ready by 9:30 AM</p>
                               </motion.div>
 
                               <motion.div
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 1.0 }}
-                                className="bg-gradient-to-br from-cyan-100/80 to-sky-100/80 rounded-2xl p-5 border border-sky-200/50"
+                                className="bg-gradient-to-br from-pink-100/80 to-purple-100/80 rounded-2xl p-5 border border-purple-200/50"
                               >
-                                <p className="text-sky-500 text-sm font-semibold uppercase tracking-wide mb-2">⏱️ Duration</p>
-                                <p className="text-sky-900 text-xl font-bold">20-Minute Flight</p>
-                                <p className="text-sky-600 mt-1">+ Safety Briefing</p>
+                                <p className="text-purple-500 text-sm font-semibold uppercase tracking-wide mb-2">👥 Who&apos;s Going?</p>
+                                <p className="text-purple-900 text-xl font-bold">Just You & Me</p>
+                                <p className="text-purple-600 mt-1">A date for two! 💑</p>
                               </motion.div>
                             </div>
 
-                            {/* What's Included */}
+                            {/* Hints Section */}
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -1988,38 +1995,38 @@ export default function Home() {
                               className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-6 mb-8 border border-amber-200/50"
                             >
                               <p className="text-amber-700 font-bold text-lg mb-4 flex items-center gap-2">
-                                <span className="text-2xl">🌟</span> What&apos;s Included
+                                <span className="text-2xl">💡</span> Little Hints
                               </p>
                               <div className="grid md:grid-cols-2 gap-3">
                                 <div className="flex items-center gap-3 text-amber-800">
-                                  <span className="text-xl">🏖️</span>
-                                  <span>Cottesloe Beach aerial views</span>
+                                  <span className="text-xl">👗</span>
+                                  <span>Wear comfortable clothes</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-amber-800">
-                                  <span className="text-xl">🌊</span>
-                                  <span>Fremantle Port & Swan River</span>
+                                  <span className="text-xl">📸</span>
+                                  <span>Bring your camera!</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-amber-800">
-                                  <span className="text-xl">🏝️</span>
-                                  <span>Leighton Beach coastline</span>
+                                  <span className="text-xl">🌤️</span>
+                                  <span>Perfect for a sunny day</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-amber-800">
-                                  <span className="text-xl">🅿️</span>
-                                  <span>On-site parking included</span>
+                                  <span className="text-xl">😍</span>
+                                  <span>You&apos;ll LOVE it!</span>
                                 </div>
                               </div>
                             </motion.div>
 
-                            {/* Location */}
+                            {/* Mystery Location */}
                             <motion.div
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 1.2 }}
                               className="text-center bg-gradient-to-r from-rose-100/60 to-pink-100/60 rounded-xl p-5 border border-rose-200/40"
                             >
-                              <p className="text-rose-500 text-sm font-semibold uppercase tracking-wide mb-1">📍 Departure Location</p>
-                              <p className="text-rose-800 font-semibold">Jandakot Heli-Co</p>
-                              <p className="text-rose-600 text-sm">8 Bell Court, Jandakot, WA 6164</p>
+                              <p className="text-rose-500 text-sm font-semibold uppercase tracking-wide mb-1">📍 Location</p>
+                              <p className="text-rose-800 font-semibold text-lg">Secret! 🤫</p>
+                              <p className="text-rose-600 text-sm">I&apos;ll take you there myself 💕</p>
                             </motion.div>
 
                             {/* Romantic Footer Message */}
@@ -2029,13 +2036,13 @@ export default function Home() {
                               transition={{ delay: 1.4 }}
                               className="mt-8 text-center"
                             >
-                              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg">
+                              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg">
                                 <span className="text-2xl">💕</span>
-                                <span className="font-semibold text-lg">For You & Me - Flying Together!</span>
+                                <span className="font-semibold text-lg">An Adventure Awaits Us!</span>
                                 <span className="text-2xl">💕</span>
                               </div>
-                              <p className="text-rose-600 mt-4 text-lg italic" style={{ fontFamily: 'Playfair Display, serif' }}>
-                                Let&apos;s soar through the skies together, my love! 🌅✨
+                              <p className="text-purple-600 mt-4 text-lg italic" style={{ fontFamily: 'Playfair Display, serif' }}>
+                                Get ready for the surprise, my love! 🌟✨
                               </p>
                             </motion.div>
                           </div>
@@ -2053,7 +2060,7 @@ export default function Home() {
                             transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                             className="absolute top-32 right-4 text-2xl"
                           >
-                            ⭐
+                            🎁
                           </motion.div>
                           <motion.div
                             animate={{ opacity: [0.5, 1, 0.5] }}
